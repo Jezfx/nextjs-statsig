@@ -1,6 +1,6 @@
 import Router from "next/router";
 
-import { rudderStackTrack } from "../../utils/tracking";
+import { rudderstackTrack } from "../../utils/tracking";
 
 // This function gets called at build time on server-side.
 // It won't be called on client-side, so you can even do
@@ -23,7 +23,7 @@ export async function getStaticProps() {
 }
 
 const handleOnProductClick = (handle) => {
-  rudderStackTrack("Product Clicked", { handle });
+  rudderstackTrack("Product Clicked", { handle });
   Router.push("/checkout");
 };
 

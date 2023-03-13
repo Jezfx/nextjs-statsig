@@ -1,9 +1,9 @@
-const isRudderStackAvailable =
+const isRudderstackAvailable = () =>
   typeof window !== "undefined" &&
   typeof window.rudderanalytics !== "undefined";
 
-export const rudderStackTrack = (eventName, body) => {
-  if (isRudderStackAvailable) {
+export const rudderstackTrack = (eventName, body) => {
+  if (isRudderstackAvailable()) {
     window.rudderanalytics.track(eventName, body);
   }
 };
