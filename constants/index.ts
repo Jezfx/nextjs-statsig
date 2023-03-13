@@ -6,8 +6,8 @@ export const environment = {
   // Default Experiment Group Fallback
   GROUP_PARAM_FALLBACK: "error_default_bucket",
 
-  rudderstackWriteKey: process.env["RUDDERSTACK_WRITEKEY"],
-  rudderstackDataPlaneUrl: process.env["RUDDERSTACK_DATAPLANE_URL"],
+  rudderstackWriteKey: process.env["NEXT_PUBLIC_RUDDERSTACK_WRITEKEY"],
+  rudderstackDataPlaneUrl: process.env["NEXT_PUBLIC_RUDDERSTACK_DATAPLANE_URL"],
 
   STATSIG_SERVER_API_KEY: process.env["STATSIG_SERVER_API_KEY"],
 
