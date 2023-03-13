@@ -10,8 +10,6 @@ function App({ Component, pageProps }) {
 
   const userID = Cookies.get(environment.UID_COOKIE);
 
-  console.log(Component);
-
   return (
     <StatsigProvider
       sdkKey={environment.NEXT_PUBLIC_STATSIG_CLIENT_SDK_KEY}

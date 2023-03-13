@@ -1,3 +1,7 @@
+import Router from "next/router";
+
+import { rudderStackTrack } from "../../utils/tracking";
+
 // This function gets called at build time on server-side.
 // It won't be called on client-side, so you can even do
 // direct database queries.
@@ -18,16 +22,23 @@ export async function getStaticProps() {
   };
 }
 
+const handleOnProductClick = (handle) => {
+  rudderStackTrack("Product Clicked", { handle });
+  Router.push("/checkout");
+};
+
 const renderProduct = ({ title, handle }) => {
-  return <h1 key={handle}>{title}</h1>;
+  return (
+    <li>
+      <button onClick={handleOnProductClick} key={handle}>
+        {title}
+      </button>
+    </li>
+  );
 };
 
 const Shop = ({ products = [] }) => {
-  return <div>{products.map(renderProduct)}</div>;
+  return <ul>{products.map(renderProduct)}</ul>;
 };
-
-// export default Shop;
-
-// const Shop = () => <h1>foo</h1>;
 
 export default Shop;
