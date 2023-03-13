@@ -1,3 +1,4 @@
+import Script from "next/script";
 import { StatsigProvider } from "statsig-react";
 import Cookies from "js-cookie";
 
@@ -18,6 +19,28 @@ function App({ Component, pageProps }) {
       user={{ userID }}
     >
       <Component {...pageProps} />
+
+      <Script
+        dangerouslySetInnerHTML={{
+          __html: `
+          function OptanonWrapper() {
+            if (window.OneTrust.IsAlertBoxClosed()) {
+              // Load the Rudderstack SDK
+              rudderanalytics.load('${environment.rudderstackWriteKey}', '${environment.rudderstackDataPlaneUrl}', {
+                // cookieConsentManager: {
+                //   oneTrust: {
+                //     enabled: true
+                //   }
+                // },
+                //other options
+              });
+            }
+          }
+          `,
+        }}
+        id="OneTrust Callback"
+        type="text/javascript"
+      />
     </StatsigProvider>
   );
 }
