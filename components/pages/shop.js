@@ -23,14 +23,14 @@ export async function getStaticProps() {
 }
 
 const handleOnProductClick = (handle) => {
-  rudderstackTrack("Product Clicked", { handle });
+  rudderstackTrack("Product Clicked", handle);
   Router.push("/checkout");
 };
 
 const renderProduct = ({ title, handle }) => {
   return (
     <li>
-      <button onClick={handleOnProductClick} key={handle}>
+      <button onClick={() => handleOnProductClick(handle)} key={handle}>
         {title}
       </button>
     </li>
