@@ -3,12 +3,17 @@ import { StatsigProvider } from "statsig-react";
 import Cookies from "js-cookie";
 
 import { environment } from "../constants/";
+import { useEffect } from "react";
 
 function App({ Component, pageProps }) {
   // Middleware will automatically set a cookie for the user if they visit a page
   //   const userID = Cookies.get(UID_COOKIE)
 
   const userID = Cookies.get(environment.UID_COOKIE);
+
+  useEffect(() => {
+    window.rudderanalytics.identify(userID);
+  }, [userID]);
 
   return (
     <StatsigProvider

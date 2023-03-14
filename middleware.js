@@ -9,7 +9,7 @@ const IS_UUID = /^[0-9a-f-]+$/i;
 
 export async function middleware(req, event) {
   // Get the user ID from the cookie or get a new one
-  let userId = req.cookies.get(environment.UID_COOKIE)?.value;
+  let userId = req.cookies.get("uid");
   let hasUserId = !!userId;
 
   // If there's no active user ID in cookies or its value is invalid, get a new one
@@ -21,14 +21,17 @@ export async function middleware(req, event) {
   // eslint-disable-next-line no-undef
   await Statsig.initialize(environment.STATSIG_SERVER_API_KEY);
 
-  const backgroundExperiment = await Statsig.getExperiment(
+  const homepageBannerExperiment = await Statsig.getExperiment(
     { userID: userId },
-    environment.EXPERIMENT
+    "homepage_banner"
   );
 
-  const background = backgroundExperiment.get("background", "white");
+  const globalSettings = await Statsig.getConfig({ userID: userId }, "global");
 
-  console.log(background);
+  const banner_uit = homepageBannerExperiment.get("banner_unit", "buy_again");
+  const background = globalSettings.get("background", "white");
+
+  // const response = NextResponse.next()
 
   // Clone the URL and change its pathname to point to a bucket
   const url = req.nextUrl.clone();
@@ -36,6 +39,9 @@ export async function middleware(req, event) {
 
   // Response that'll rewrite to the selected bucket
   const res = NextResponse.rewrite(url);
+
+  res.headers.append("banner_uit", banner_uit);
+  res.headers.append("background", background);
 
   // Add the user ID to the response cookies if it's not there or if its value was invalid
   if (!hasUserId) {

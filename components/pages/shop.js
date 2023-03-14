@@ -29,7 +29,7 @@ const handleOnProductClick = (handle) => {
 
 const renderProduct = ({ title, handle }) => {
   return (
-    <li>
+    <li key={handle}>
       <button onClick={() => handleOnProductClick(handle)} key={handle}>
         {title}
       </button>

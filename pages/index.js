@@ -1,36 +1,63 @@
 /* eslint-disable */
 import React from "react";
-import { useGate } from "statsig-react";
-
 import Head from "next/head";
+import Link from "next/link";
+import Router from "next/router";
+import { useGate, useExperiment } from "statsig-react";
+
+import { rudderstackTrack } from "../utils/tracking";
 import styles from "../styles/Home.module.css";
 
-export default function Home() {
-  const { value, isLoading } = useGate("foogate");
+export const getServerSideProps = async (context) => {
+  const bannerUit = context.res.getHeaders().banner_uit;
+  const background = context.res.getHeaders().background;
 
-  console.log(value, isLoading);
+  return {
+    props: {
+      bannerUit,
+      background,
+    },
+  };
+};
+
+const banner = {
+  daily_deals: "Daily Deals",
+  items_you_may_like: "Items you may like",
+  buy_again: "Buy Again",
+};
+
+export default function Home({ bannerUit, background }) {
+  // const { config } = useExperiment("homepage_banner");
+
+  const handleOnShopClick = () => {
+    rudderstackTrack("Banner Click", bannerUit);
+    Router.push("/shop");
+  };
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} style={{ background }}>
       <Head>
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+        {/* <h1 className={styles.title}>Banner: {props.bannerUit}</h1> */}
+        {/* <h1 className={styles.title}>
+          useExperiment: {config.value.banner_unit}
+        </h1> */}
+
+        <h1>{banner[bannerUit]}</h1>
+        <button onClick={handleOnShopClick}>Shop</button>
 
         <p className={styles.description}>
           Get started by editing <code>pages/index.js</code>
         </p>
 
         <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
+          <Link href="/shop">
+            <a className={styles.card}>Shop</a>
+          </Link>
 
           <a href="https://nextjs.org/learn" className={styles.card}>
             <h3>Learn &rarr;</h3>
