@@ -10,10 +10,12 @@ import styles from "../styles/Home.module.css";
 
 export const getServerSideProps = async (context) => {
   const bannerUit = context.res.getHeaders().banner_uit;
+  const homepageLink = context.res.getHeaders().homepage_link;
   const background = context.res.getHeaders().background;
 
   return {
     props: {
+      homepageLink,
       bannerUit,
       background,
     },
@@ -26,9 +28,7 @@ const banner = {
   buy_again: "Buy Again",
 };
 
-export default function Home({ bannerUit, background }) {
-  // const { config } = useExperiment("homepage_banner");
-
+export default function Home({ bannerUit, background, homepageLink }) {
   const handleOnShopClick = () => {
     rudderstackTrack("Banner Click", bannerUit);
     Router.push("/shop");
@@ -56,7 +56,7 @@ export default function Home({ bannerUit, background }) {
 
         <div className={styles.grid}>
           <Link href="/shop">
-            <a className={styles.card}>Shop</a>
+            <a className={styles.card}>{homepageLink}</a>
           </Link>
 
           <a href="https://nextjs.org/learn" className={styles.card}>

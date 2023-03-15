@@ -1,5 +1,5 @@
 export const environment = {
-  UID_COOKIE: "uid",
+  UID_COOKIE: "session_a_uid",
 
   // This is the experiment that will be used to determine the bucket
   EXPERIMENT: "statsig_example",

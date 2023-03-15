@@ -9,7 +9,7 @@ const IS_UUID = /^[0-9a-f-]+$/i;
 
 export async function middleware(req, event) {
   // Get the user ID from the cookie or get a new one
-  let userId = req.cookies.get("uid");
+  let userId = req.cookies.get("session_a_uid");
   let hasUserId = !!userId;
 
   // If there's no active user ID in cookies or its value is invalid, get a new one
@@ -26,9 +26,15 @@ export async function middleware(req, event) {
     "homepage_banner"
   );
 
+  const homepageLinkExperiment = await Statsig.getExperiment(
+    { userID: userId },
+    "bundle_link"
+  );
+
   const globalSettings = await Statsig.getConfig({ userID: userId }, "global");
 
   const banner_uit = homepageBannerExperiment.get("banner_unit", "buy_again");
+  const homepage_link = homepageLinkExperiment.get("link", "shop");
   const background = globalSettings.get("background", "white");
 
   // const response = NextResponse.next()
@@ -41,12 +47,13 @@ export async function middleware(req, event) {
   const res = NextResponse.rewrite(url);
 
   res.headers.append("banner_uit", banner_uit);
+  res.headers.append("homepage_link", homepage_link);
   res.headers.append("background", background);
 
   // Add the user ID to the response cookies if it's not there or if its value was invalid
   if (!hasUserId) {
     res.cookies.set(environment.UID_COOKIE, userId, {
-      maxAge: 60 * 60 * 24, // identify users for 24 hours
+      maxAge: 60 * 60 * 24 * 30, // identify users for 1 month
     });
   }
 
